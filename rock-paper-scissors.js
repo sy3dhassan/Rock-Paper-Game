@@ -11,20 +11,40 @@ updateScoreElement();
 
 let isAutoPlaying = false;
 let intervalId;
+let autoPlayBtn = document.querySelector('.js-auto-play-btn');
+
+autoPlayBtn.addEventListener('click', () => {
+isAutoPlaying = !isAutoPlaying;
+autoPlayBtn.textContent = isAutoPlaying ? 'Stop Playing' : 'Auto Play';
+})
 
 function autoPlay(){
+   
+      if (isAutoPlaying) {
+        // Start autoplay logic
+        intervalId = setInterval(() => {
+           const playerMove = pickComputerMove();
+               playGame(playerMove);
+                }, 1000);
 
-    if (!isAutoPlaying){
-       intervalId = setInterval(function(){
-            const playerMove = pickComputerMove();
-            playGame(playerMove);
-        }, 1000);
-        isAutoPlaying = true;
-    } else {
+      } else {
         clearInterval(intervalId);
-        isAutoPlaying = false;
-    }  
-}
+      }
+    };
+
+// function autoPlay(){
+
+//     if (!isAutoPlaying){
+//        intervalId = setInterval(function(){
+//             const playerMove = pickComputerMove();
+//             playGame(playerMove);
+//         }, 1000);
+//         isAutoPlaying = true;
+//     } else {
+//         clearInterval(intervalId);
+//         isAutoPlaying = false;
+//     }  
+// }
 
 document.querySelector(".js-rock-btn")
 .addEventListener('click', ( ) => {
@@ -41,6 +61,22 @@ document.querySelector(".js-scissors-btn")
     playGame('scissors')
 });
 
+document.querySelector('.js-auto-play-btn')
+.addEventListener('click', () => {
+    autoPlay();
+})
+
+document.querySelector('.js-reset-btn')
+.addEventListener('click', ()=> {
+    score.wins = 0,
+    score.losses = 0,
+    score.ties = 0;
+    localStorage.removeItem('score')
+    updateScoreElement();
+})
+
+
+
 document.body.addEventListener('keydown', (event) => {
     if (event.key === 'r'){
         playGame('rock');
@@ -48,6 +84,12 @@ document.body.addEventListener('keydown', (event) => {
         playGame('paper');
     } else if (event.key === 's'){
         playGame('scissors');
+    } else if (event.key === 'Backspace'){
+        score.wins = 0,
+    score.losses = 0,
+    score.ties = 0;
+    localStorage.removeItem('score')
+    updateScoreElement();
     }
 });
 
